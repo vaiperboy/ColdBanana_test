@@ -1,6 +1,6 @@
 
 ---
-![Screenshot of Website](./website_ss.png)
+![Screenshot of Website](./website_ss.PNG)
 # Cold Banana Test
 ### **Umbraco Contact Us Page Implementation**
 
