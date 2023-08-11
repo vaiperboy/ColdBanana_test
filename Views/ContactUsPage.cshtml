@@ -1,0 +1,207 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.ContactUsPage>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+    Layout = null;
+}
+@{
+    var maxLength = Model.Value<int>("messageMaxLength");
+    var formHeading = Model.Value<string>("formHeading");
+    var formIntroduction = Model.Value<string>("formIntroduction");
+    var svgUrl = Model.Value<IPublishedContent>("formImage").Url();
+
+}
+@functions {
+    public static string ConvertMarkdownToHtml(string markdown) {
+        return Markdig.Markdown.ToHtml(markdown ?? string.Empty);
+    }
+}
+
+
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: conic-gradient(from -2deg at 52.89% 52.66%, #A5D3E7 37.931577265262604deg, #F0DAC2 159.6740162372589deg, #F6E3CD 242.71217107772827deg, #9FD3EA 342.99387216567993deg);
+    }
+
+    .contact-card {
+        width: 80%;
+        height: 70%;
+        margin: auto;
+        display: flex;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .contact-info {
+        flex: 2;
+        background-color: #5FC3CA;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .contact-form {
+        flex: 3;
+        padding: 20px;
+    }
+
+  
+    .contact-info p {
+        color: #000;
+        font-family: Hannari;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 18px;
+    }
+
+    label {
+        color: #17a2b8;
+        text-align: center;
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    .char-counter {
+        bottom: -10px;
+        right: 10px;
+        background: rgba(255, 255, 255, 0.6);
+        padding: 0 5px;
+        border-radius: 5px;
+        font-size: 0.8rem;
+    }
+
+    textarea.form-control {
+        padding-bottom: 25px;
+    }
+
+    .mail-image {
+        height: 90%;
+        width: 80%;
+    }
+
+    .submit-button{ 
+        background-color: red;
+
+    }
+
+</style>
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container d-flex align-items-center justify-content-center vh-100">
+    <div class="contact-card">
+        <div class="contact-form">
+            <h2>@formHeading</h2>
+            @Html.Raw(ConvertMarkdownToHtml(formIntroduction))
+            <form id="contactForm" method="post">
+                <div class="form-group">
+                    <label for="name">Full Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <div class="position-relative">
+                        <label for="message">Message:</label>
+                        <textarea rows="5" id="message" name="message" required maxlength="@maxLength" class="form-control"></textarea>
+                        <p id="charCount" class="position-absolute char-counter">0/@maxLength</p>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-info submit-button">Send</button>
+            </form>
+        </div>
+        <div class="contact-info">
+            <img src="@svgUrl" class="mail-image"/>
+        </div>
+    </div>
+</div>
+
+<script>
+        var formInputs = document.querySelectorAll("#contactForm input, #contactForm textarea");
+
+    //for char counter
+    document.addEventListener("DOMContentLoaded", function () {
+        var messageField = document.getElementById("message");
+        var charCount = document.getElementById("charCount");
+
+        messageField.addEventListener("input", function () {
+            var currentLength = messageField.value.length;
+            charCount.textContent = currentLength + "/@maxLength";
+        });
+    });
+
+    document.getElementById("contactForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        var submitButton = event.target.querySelector('button[type="submit"]');
+        submitButton.innerText = "Sending...";
+        submitButton.disabled = true;
+
+        // Disable all the inputs
+        formInputs.forEach(input => input.disabled = true);
+
+        var formData = {
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            message: document.getElementById("message").value
+        };
+
+        console.log("sending")
+        fetch('/umbraco/api/ContactUs/SendEmail', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("HTTP status " + JSON.stringify(response))
+                }
+                showAlert("@(Model.Value<string>("successMessage"))", "success");
+           
+                resetFormState();
+                return response.text()
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+                showAlert("@(Model.Value<string>("errorMessage"))", "danger");
+                resetFormState();
+            });
+    });
+
+    function resetFormState() {
+        var submitButton = document.getElementById("contactForm").querySelector('button[type="submit"]');
+        submitButton.innerText = "Send";
+        submitButton.disabled = false;
+
+        // Enable all the inputs again
+        formInputs.forEach(input => input.disabled = false);
+    }
+
+    function showAlert(message, type) {
+        var alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} mt-1`;
+        alertDiv.innerText = message;
+        alertDiv.setAttribute("role", "alert");
+        document.getElementById("contactForm").appendChild(alertDiv);
+
+        // Remove the alert after 5 seconds
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+</script>
