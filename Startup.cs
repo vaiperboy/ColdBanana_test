@@ -30,6 +30,9 @@ namespace ColdBanana {
                 .AddWebsite()
                 .AddComposers()
                 .Build();
+
+            services.Configure<SmtpSettings>(_config.GetSection("SmtpSettings")); //Add SMTP settings
+
         }
 
         /// <summary>
