@@ -2,11 +2,18 @@
 ---
 ![Screenshot of Website](./website_ss.PNG)
 # Cold Banana Test
+## Credentials:
+- **Email: coldbanana.ahmed.dev@gmail.com**
+- **Password: awu@rhv1qph9geb4HND**
+
+
 ### **Umbraco Contact Us Page Implementation**
 
 This project outlines a contact page implementation using Umbraco version 10.6.1 and .NET 6.0.413.
 
 **I understand this Git might be ugly but I was unsure of the dependencies that Umbraco needs**
+
+
 
 ### Method of sending the email
 Since running our own mail server would not be the greatest due (due to hosting and spam filters) and for the sake of the simplicty of this project, I had setup a simple Gmail account with the details exposed via the JSON file (I know I did) that has 2FA enabled and generated App Passwords for it (only way to get gmail running with SMTP, that I know of)
