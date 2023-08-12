@@ -1,0 +1,25 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Ahmed\\Desktop\\ColdBanana\\ColdBanana\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.ColdBanana.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.build.ColdBanana.props",
+      "PackagePath": "build\\ColdBanana.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildMultiTargeting.ColdBanana.props",
+      "PackagePath": "buildMultiTargeting\\ColdBanana.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildTransitive.ColdBanana.props",
+      "PackagePath": "buildTransitive\\ColdBanana.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
