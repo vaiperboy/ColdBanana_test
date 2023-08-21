@@ -6,6 +6,7 @@
 - **Email: coldbanana.ahmed.dev@gmail.com**
 - **Password: awu@rhv1qph9geb4HND**
 
+### [Figma Link](https://www.figma.com/file/VMBYMVwRHRvglu8MrVEGGH/ColdBanana?type=design&node-id=0%3A1&mode=design&t=32oVVj0OQjppc6zI-1)
 
 ### **Umbraco Contact Us Page Implementation**
 
